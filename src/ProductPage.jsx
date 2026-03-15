@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useCart } from './CartStore';
 import axios from 'axios';
+import { useLocation } from 'wouter';
+
 import ProductCard from './ProductCard';
+import { useFlashMessage } from './FlashMessageStore'
 
 function ProductPage() {
   const [products, setProducts] = useState([]);
+  const [, setLocation] = useLocation();
+  const { addToCart } = useCart();
+  const { showMessage } = useFlashMessage();
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -28,6 +36,11 @@ function ProductPage() {
               imageUrl={product.imageUrl}
               productName={product.name}
               price={product.price.toFixed(2)}
+              handleAddToCart={() => {
+                addToCart(product)
+                showMessage("New item added to cart!");
+                setLocation('/cart');
+              }}
             />
           </div>
         ))}

@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductCard from './ProductCard';
+import { useCart } from './CartStore';
+import { useFlashMessage } from './FlashMessageStore';
+import { useLocation } from 'wouter';
 
 function HomePage() {
     const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [, setLocation] = useLocation();
+    const { addToCart } = useCart();
+    const { showMessage } = useFlashMessage();
 
     useEffect(() => {
         const fetchFeaturedProducts = async () => {
@@ -19,21 +25,26 @@ function HomePage() {
     }, []);
 
     const renderFeaturedProducts = () => {
-    const productElements = [];
-    for (const product of featuredProducts) {
-      productElements.push(
-        <div key={product.id} className="col-md-3 mb-4">
-          <ProductCard
-            id={product.id}
-            imageUrl={product.imageUrl}
-            productName={product.name}
-            price={product.price.toFixed(2)}
-          />
-        </div>
-      );
-    }
-    return productElements;
-  };
+        const productElements = [];
+        for (const product of featuredProducts) {
+            productElements.push(
+                <div key={product.id} className="col-md-3 mb-4">
+                    <ProductCard
+                        id={product.id}
+                        imageUrl={product.imageUrl}
+                        productName={product.name}
+                        price={product.price.toFixed(2)}
+                        handleAddToCart={() => {
+                            addToCart(product)
+                            showMessage("New item added to cart!");
+                            setLocation('/cart');
+                        }}
+                    />
+                </div>
+            );
+        }
+        return productElements;
+    };
 
     return (
         <>
