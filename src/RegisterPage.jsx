@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useLocation } from 'wouter';
+import { useFlashMessage } from './FlashMessageStore';
+
+
+
+
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Name is required'),
@@ -16,6 +22,8 @@ const validationSchema = Yup.object({
 
 function RegisterPage() {
   const [marketingPreferences, setMarketingPreferences] = useState([]);
+  const [, setLocation] = useLocation();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const fetchMarketingPreferences = async () => {
@@ -42,11 +50,20 @@ function RegisterPage() {
     country: ''
   };
 
-  const handleSubmit = (values, formikHelpers) => {
-    // Here you would typically make an API call to register the user
-    console.log('Form values:', values);
+  const { showMessage } = useFlashMessage();
+
+  const handleSubmit = async (values, formikHelpers) => {
+  try {
+    console.log(values);
+    showMessage('Registration successful!', 'success'); 
+  } catch (error) {
+    console.error('Registration failed:', error.response?.data || error.message);
+    showMessage('Registration failed. Please try again.', 'error');
+  } finally {
     formikHelpers.setSubmitting(false);
-  };
+    setLocation("/");
+  }
+};
 
   return (
     <div className="container mt-5">

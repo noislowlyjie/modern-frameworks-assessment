@@ -8,11 +8,14 @@ import ContactUs from './ContactUs';
 import { Route, Switch } from 'wouter';
 import './index.css';
 import ProductCard from './ProductCard';
+import FlashMessage from "./FlashMessage";
 
 function App() {
   return (
     <>
       <Navbar />
+      <FlashMessage />
+      
       <Switch>
         <Route path="/" component={HomePage} />
         <Route path="/products" component={ProductPage} />
