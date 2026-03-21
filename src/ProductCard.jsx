@@ -15,6 +15,7 @@ const ProductCard = (props) => {
       />
       <div className="card-body">
         <h5 className="card-title">{props.productName}</h5>
+        <p className="card-text">{props.description}</p>
         <p className="card-text">${props.price}</p>
         <button className="btn btn-primary" onClick={props.handleAddToCart}>
           Add to Cart

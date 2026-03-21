@@ -13,18 +13,18 @@ function ProductPage() {
   const { showMessage } = useFlashMessage();
 
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('/products.json');
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/products`);
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
 
-    fetchProducts();
-  }, []);
+  fetchProducts();
+}, []);
 
   return (
     <div className="container my-5">
@@ -36,6 +36,7 @@ function ProductPage() {
               imageUrl={product.imageUrl}
               productName={product.name}
               price={product.price.toFixed(2)}
+              description={product.description}
               handleAddToCart={() => {
                 addToCart(product)
                 showMessage("New item added to cart!");
