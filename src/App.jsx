@@ -10,6 +10,7 @@ import './index.css';
 import ProductCard from './ProductCard';
 import FlashMessage from "./FlashMessage";
 import ShoppingCart from './ShoppingCart';
+import UserLogin from "./UserLogin";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/about-us" component={AboutUs} />
         <Route path="/contact-us" component={ContactUs} />
         <Route path="/cart" component={ShoppingCart}/>
+        <Route path="/login" component={UserLogin}/>
       </Switch>
       <footer className="bg-dark text-white text-center py-3">
         <div className="container">
