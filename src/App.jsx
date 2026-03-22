@@ -27,9 +27,9 @@ function App() {
         <Route path="/cart" component={ShoppingCart}/>
         <Route path="/login" component={UserLogin}/>
       </Switch>
-      <footer className="bg-dark text-white text-center py-3">
+      <footer className="bg-dark text-white text-center py-1">
         <div className="container">
-          <p>&copy; 2023 E-Shop. All rights reserved.</p>
+          <p>&copy; 2026 Kopi Space. All rights reserved.</p>
         </div>
       </footer>
     </>

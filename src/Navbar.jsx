@@ -32,16 +32,6 @@ function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-                <Link href="/products" className={`nav-link ${location === '/products' ? 'active' : ''}`}>
-                Products
-              </Link>
-            </li>
-            <li className="nav-item">
-               <Link href="/register" className={`nav-link ${location === '/register' ? 'active' : ''}`}>
-                Register
-              </Link>
-            </li>
-            <li className="nav-item">
               <Link href="/about-us" className={`nav-link ${location === '/about-us' ? 'active' : ''}`}>
                 About Us
               </Link>
@@ -52,13 +42,23 @@ function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/cart" className={`nav-link ${location === '/cart' ? 'active' : ''}`}>
-                Cart
+                <Link href="/products" className={`nav-link ${location === '/products' ? 'active' : ''}`}>
+                Products
+              </Link>
+            </li>
+            <li className="nav-item">
+               <Link href="/register" className={`nav-link ${location === '/register' ? 'active' : ''}`}>
+                Register
               </Link>
             </li>
                <li className="nav-item">
               <Link href="/login" className={`nav-link ${location === '/login' ? 'active' : ''}`}>
                 Login
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link href="/cart" className={`nav-link ${location === '/cart' ? 'active' : ''}`}>
+                Cart
               </Link>
             </li>
           </ul>

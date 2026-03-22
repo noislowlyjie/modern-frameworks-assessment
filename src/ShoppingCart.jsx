@@ -17,7 +17,7 @@ const ShoppingCart = () => {
       {isLoading ? (
         <p>Loading cart...</p>
       ) : cart.length === 0 ? (
-        <p>Your cart is empty.</p>
+        <p>Your cart is empty. WHY??</p>
       ) : (
         <>
           <ul className="list-group">
