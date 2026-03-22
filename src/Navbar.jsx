@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
+import { useCart } from './CartStore';
 
 function Navbar() {
   const [isNavbarShowing, setNavbarShowing] = useState(false);
   const [location] = useLocation();
+  const { cart } = useCart();
+
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const toggleNavbar = () => {
     setNavbarShowing(!isNavbarShowing);
