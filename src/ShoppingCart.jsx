@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useCart } from './CartStore';
 import { useJwt } from "./UserStore";
 import axios from 'axios';
@@ -6,10 +6,34 @@ import axios from 'axios';
 const ShoppingCart = () => {
   const { cart, fetchCart, getCartTotal, modifyQuantity, removeFromCart, isLoading } = useCart();
 
-   // Fetch the cart data when the component mounts
+
+  const { getJwt } = useJwt();
+
     useEffect(() => {
         fetchCart();
     }, []);
+
+    const handleCheckout = async () => {
+        const jwt = getJwt();
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/checkout`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
+            );
+            // Redirect to Stripe Checkout
+            window.location.href = response.data.url;
+        } catch (error) {
+            console.error("Error during checkout:", error);
+            alert("Checkout failed. Please try again.");
+        } finally {
+
+        }
+    };
 
   return (
     <div className="container mt-4">
@@ -39,6 +63,13 @@ const ShoppingCart = () => {
           </ul>
           <div className="mt-3 mb-3 text-end">
             <h4>Total: ${getCartTotal()}</h4>
+            <button
+              className="btn btn-primary mt-2"
+              onClick={handleCheckout}
+              disabled={isLoading || cart.length === 0}
+            >
+              Checkout
+            </button>
           </div>
         </>
       )}

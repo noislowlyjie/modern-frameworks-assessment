@@ -3,6 +3,22 @@ import axios from 'axios';
 import { useEffect, useRef } from "react";
 import { useJwt } from "./UserStore";
 
+const getProductId = (item) => item?.product_id ?? item?.productId ?? item?.id ?? item?.product?.id;
+
+const toApiCartItem = (item) => {
+  const productId = getProductId(item);
+  const quantity = Number(item?.quantity ?? 0);
+
+  if (!productId || quantity <= 0) {
+    return null;
+  }
+
+  return {
+    product_id: productId,
+    quantity,
+  };
+};
+
 // Define the initial state of the cart. We put in one piece of test data
 const initialCart = [
 
@@ -57,16 +73,16 @@ export const useCart = () => {
    // updatedCart contains the latest cart items
     const updateCart = async (updatedCart) => {
         const jwt = getJwt();
+      if (!jwt) {
+        return;
+      }
+
         setIsLoading(true);
         try {
-            // .map  will generate the new array
-            // which will consist of the elements from the
-            // original array but transformed somehow
-            const updatedCartItems = updatedCart.map(item => ({
-                product_id: item.product_id,
-                quantity: item.quantity
-            })
-            );
+        const updatedCartItems = updatedCart
+          .map(toApiCartItem)
+          .filter(Boolean);
+
             await axios.put(import.meta.env.VITE_API_URL + '/api/cart', {
                 cartItems: updatedCartItems
             }, {
@@ -75,15 +91,19 @@ export const useCart = () => {
                 }
             })
 
-        } catch (e) {
-            console.error("Error updating cart:", error);
+      } catch (error) {
+        console.error("Error updating cart:", error);
         } finally {
             setIsLoading(false);
         }
     }
 
   const removeFromCart = (item) => {
-    const existingItemIndex = cart.findIndex(i => i.id === item);
+    const itemId = typeof item === 'object' ? item.id : item;
+    const existingItemIndex = cart.findIndex(i => i.id === itemId);
+    if (existingItemIndex === -1) {
+      return;
+    }
     const modifiedCart = cart.toSpliced(existingItemIndex, 1);
     setCart(modifiedCart)
     updateCart(modifiedCart);
@@ -101,7 +121,6 @@ export const useCart = () => {
                 }
             );
             setCart(response.data);
-            updateCart(response.data);
         } catch (error) {
             console.error("Error fetching cart:", error);
         } finally {
@@ -118,6 +137,7 @@ export const useCart = () => {
 
   return {
     cart,
+    isLoading,
     getCartTotal,
     addToCart,
     modifyQuantity,
