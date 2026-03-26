@@ -51,6 +51,9 @@ function Navbar() {
                 Register
               </Link>
             </li>
+              <Link href="/profile" className={`nav-link ${location === '/profile' ? 'active' : ''}`}>
+                Profile
+              </Link>
                <li className="nav-item">
               <Link href="/login" className={`nav-link ${location === '/login' ? 'active' : ''}`}>
                 Login

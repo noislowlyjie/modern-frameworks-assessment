@@ -7,13 +7,18 @@ import * as Yup from 'yup';
 
 export default function Profile() {
     const { getJwt } = useJwt();
-    const [initialValues, setInitialValues] = useState({});
+    const [initialValues, setInitialValues] = useState({
+        name: '',
+        email: '',
+        salutation: '',
+        country: '',
+        marketingPreferences: []
+    });
     const { showMessage } = useFlashMessage();
 
-
-   useEffect(() => {
+    useEffect(() => {
         const token = getJwt();
-        
+
         if (!token) {
             showMessage("You must be logged in", "danger");
             setLocation('/login');
@@ -22,27 +27,35 @@ export default function Profile() {
             const fetchData = async () => {
                 // To provide the JWT, second argument to axios.get is a configuration object
                 // There must be a `headers` key with an `Authorization` key and then `Bearer <token>`
-                const response = await axios.get(import.meta.env.VITE_API_URL + "/api/users/me", {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
-                })
-                    .catch(function (e) {
-                        showMessage("Please login again", "danger");
-                        setLocation("/");
+                try {
+                    const response = await axios.get(import.meta.env.VITE_API_URL + "/api/users/me", {
+                        headers: {
+                            Authorization: "Bearer " + token
+                        }
                     });
-                setInitialValues({
-                    ...response.data.user,
-                    // because in the database it's not stord as marketingPreferences
-                    // so we need to clone the user preferencs (and its string value in the preference key)
-                    // into marketingPreferences
-                    marketingPreferences: response.data.user.preferences.map(p => p.preference)
-                });
 
+                    const user = response?.data?.user || {};
+                    const preferences = Array.isArray(user.preferences) ? user.preferences : [];
+
+                    setInitialValues({
+                        name: '',
+                        email: '',
+                        salutation: '',
+                        country: '',
+                        marketingPreferences: [],
+                        ...user,
+                        // because in the database it's not stord as marketingPreferences
+                        // so we need to clone the user preferencs (and its string value in the preference key)
+                        // into marketingPreferences
+                        marketingPreferences: preferences.map(p => p.preference)
+                    });
+                } catch (e) {
+                    showMessage("Please login again", "danger");
+                    setLocation("/");
+                }
             }
+
             fetchData();
-
-
         }
     }, [])
 
@@ -76,10 +89,10 @@ export default function Profile() {
             actions.setSubmitting(false);
         }
     };
-    
-    const handleDeleteAccount = async () =>{
+
+    const handleDeleteAccount = async () => {
         const token = getJwt();
-        await axios.delete(import.meta.env.VITE_API_URL + "/api/users/me",{
+        await axios.delete(import.meta.env.VITE_API_URL + "/api/users/me", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -154,7 +167,7 @@ export default function Profile() {
                     );
                 }}
             </Formik>
-          <button class="btn btn-danger" onClick={handleDeleteAccount}>Delete Account</button>
+            <button className="btn btn-danger mt-3 mb-3" onClick={handleDeleteAccount}>Delete Account</button>
         </div>
     )
 }
