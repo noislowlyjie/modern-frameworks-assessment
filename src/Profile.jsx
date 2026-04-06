@@ -4,9 +4,11 @@ import { useJwt } from "./UserStore";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useFlashMessage } from './FlashMessageStore';
 import * as Yup from 'yup';
+import { useLocation } from 'wouter';
 
 export default function Profile() {
     const { getJwt } = useJwt();
+    const [, setLocation] = useLocation();
     const [initialValues, setInitialValues] = useState({
         name: '',
         email: '',
